@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todo/objectbox.g.dart';
 import 'package:todo/models/group.dart';
 import 'package:todo/ui/add_group_screen.dart';
-import 'objectbox.dart';
+import 'package:todo/ui/tasks_screen.dart';
 
 class GroupsScreen extends StatefulWidget {
   const GroupsScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   late final Store _store;
   late final Box<Group> _groupsBox;
 
-  Future<vodi> _loadStore() async {
+  Future<void> _loadStore() async {
     _store = await openStore();
     _groupsBox = _store.box<Group>();
     _loadGroups();
@@ -31,8 +32,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   @override
   void initState() {
     _loadStore();
-    _loadGroups();
-    supe.initState();
+    super.initState();
   }
 
   Future<void> _addGroup() async {
@@ -47,10 +47,14 @@ class _GroupsScreenState extends State<GroupsScreen> {
     }
   }
 
-  // Future<void> _goToTasks(Group group) async {
-  //   await Navigator.of(context).push(MaterialPageRoute(
-  //       builder: (_) => TasksScreen(group: group, store: _store)));
-  // }
+  Future<void> _goToTasks(Group group) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => TasksScreen(group: group, store: _store),
+      ),
+    );
+    _loadGroups();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +74,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
               itemBuilder: (context, index) {
                 final group = _groups[index];
                 return _GroupItem(
-                  onTap: () => null, //_goToTasks(group),
+                  onTap: () => _goToTasks(group),
                   group: group,
                 ); // _GroupItem
               },

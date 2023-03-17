@@ -7,8 +7,8 @@ class Group {
   String name = '';
   int color;
 
-  // @BackLink()
-  // final tasks = toMany<Task>();
+  @Backlink('group')
+  final tasks = ToMany<Task>();
 
   Group({
     required this.name,
